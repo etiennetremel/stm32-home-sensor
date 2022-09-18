@@ -1,0 +1,36 @@
+[tasks.build]
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.objcopy]
+command = "arm-none-eabi-objcopy"
+args = [
+    "-O", "binary",
+    "target/thumbv7m-none-eabi/release/home-sensor",
+    "home-sensor.bin"
+]
+dependencies = ["build"]
+
+[tasks.openocd]
+command = "openocd"
+args = [
+    "-f", "openocd.cfg",
+    "-c", "program target/thumbv7m-none-eabi/release/home-sensor reset"
+]
+dependencies = ["objcopy"]
+
+[tasks.flash]
+command = "cargo"
+args = [
+  "flash",
+  "--chip", "STM32F103C8",
+  "--release"
+]
+dependencies = ["objcopy"]
+
+[tasks.debug]
+command = "arm-none-eabi-gdb"
+args = [
+  "-x", "openocd.gdb",
+  "target/thumbv7m-none-eabi/release/home-sensor"
+]

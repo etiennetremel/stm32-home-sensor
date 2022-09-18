@@ -62,7 +62,7 @@ fn main() -> ! {
     lcd.set_display_mode(
         DisplayMode {
             display: Display::On,
-            cursor_visibility: Cursor::Visible,
+            cursor_visibility: Cursor::Invisible,
             cursor_blink: CursorBlink::Off,
         },
         &mut delay,
@@ -90,8 +90,10 @@ fn main() -> ! {
                     measurement.temperature, measurement.humidity
                 ),
             );
-            let line2: &str =
-                stackfmt::fmt_truncate(&mut buf_line2, format_args!("CO2: {:.0} ppm", measurement.co2));
+            let line2: &str = stackfmt::fmt_truncate(
+                &mut buf_line2,
+                format_args!("CO2: {:.0}ppm", measurement.co2),
+            );
             lcd.clear(&mut delay).unwrap();
             lcd.write_str(&line1, &mut delay).unwrap();
             lcd.set_cursor_pos(40, &mut delay).unwrap();
